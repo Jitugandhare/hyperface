@@ -20,11 +20,15 @@ app.get('/', async (req, res) => {
         const { status, genre } = req.query;
         let result = [...books]
 
-        // if(status){
-        //     if(st)
-        // }
+        if(status){
+            result=result.filter(i=>(
+                i.status || ''
+            ).toLowerCase()===status.toLowerCase())
+        }
+
+
         if (genre) {
-            result = result.filter(i => i.genre.toLowerCase() === genre.toLowerCase())
+            result = result.filter(i => ((i.genre || '').toLowerCase() === genre.toLowerCase()))
         }
         res.status(200).json({ books: result })
     } catch (error) {
