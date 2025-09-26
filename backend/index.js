@@ -65,19 +65,42 @@ app.post('/add-book', async (req, res) => {
 app.put('/book/:id', async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const idx=books.findIndex(i=>i.id===id);
-
-        if(idx===-1){
-            return res.status(404).json({msg:"book not found"})
-
+        const idx = books.findIndex(i => i.id === id);
+        const { title, author, genre, status = [] } = req.body;
+        if (idx === -1) {
+            return res.status(404).json({ msg: "book not found" })
         }
-        
+        books[idx] = {
+            id, title, author, genre, status
+        }
+        res.status(200).json(books[idx])
+
     } catch (error) {
         console.log(error)
         res.status(500).json({ msg: "Internal sever error.", error: error.message })
     }
 })
 
+
+app.delete('/book-delete/:id', async (req, res) => {
+    try {
+        const id = Number(req.params.id);
+        const idx = books.findIndex(i => i.id === id);
+
+        if (idx === -1) {
+            return res.status(404).json({ msg: "book not found" })
+        }
+        books.splice(idx, 1);
+
+        res.json({
+            msg:"book deleted successfully",
+            books
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Internal sever error.", error: error.message })
+    }
+})
 
 
 app.listen(port, async () => {
